@@ -7,13 +7,18 @@ const UserSchema = new mongoose.Schema({
   fullName : {
     type: String,
     lowercase: true,
-    trim: true
+    trim: true, 
+    minlength: 3,
   }, 
   email: {
     type: String,
     lowercase: true,
     trim: true
   }, 
+  phone: {
+    type: String,
+    required: true
+  },
   hash: String,
   salt: String,
   address: String,
@@ -55,7 +60,7 @@ UserSchema.methods.response = function response() {
 UserSchema.methods.generateToken = function token(time = '7d') {
   return sign(
     {
-      _id: this._id,
+      id: this._id,
       fullName: this.fullName,
       email: this.email,
     },

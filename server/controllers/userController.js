@@ -6,6 +6,7 @@ const register = asyncHandler(async (req, res) => {
   const {
     fullName,
     email,
+    phone,
     password,
     address,
     geoDetails
@@ -21,6 +22,7 @@ const register = asyncHandler(async (req, res) => {
 
   user.fullName = fullName;
   user.email = email;
+  user.phone = phone;
   user.address = address;
   user.location = {
     type: 'Point',
