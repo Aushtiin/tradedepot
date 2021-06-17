@@ -1,6 +1,7 @@
 const express = require('express');
 const colors = require('colors')
 const db = require('./config/db')
+const cors = require('cors')
 const routes = require('./routes')
 const { notFound, errorHandler } = require('./middleware/errorMiddleware.js')
 
@@ -11,7 +12,7 @@ require('dotenv').config()
 
 db()
 
-
+app.use(cors())
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json({ limit: '50mb' }));
 
