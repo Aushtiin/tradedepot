@@ -6,7 +6,7 @@ const router = express.Router()
 router.post('/new', protect, createProduct)
 router.get('/', protect, getProducts)
 router.post('/comment', protect, comment)
-router.route('/:id').get(getProduct).get(getComments)
-// router.get('/:id', getComments)
+router.get('/:id', getProduct)
+router.get('/comments/:id', getComments)
 
 module.exports = router
