@@ -104,7 +104,7 @@ const comment = asyncHandler(async (req, res) => {
     await comment.save()
 
     const data = {
-      from: 'Testdepot <contact@samples.mailgun.org>',
+      from: 'Testdepot <contact@samples.send.org>',
       to: comment.createdBy.email,
       subject: 'Someone replied to your comment',
       text: `${user.fullName} replied to your comment with ${body}`
@@ -119,7 +119,7 @@ const comment = asyncHandler(async (req, res) => {
   await comment.save()
 
   const data = {
-    from: 'Testdepot <me@samples.mailgun.org>',
+    from: 'Testdepot <me@samples.send.org>',
     to: product.createdBy.email,
     subject: 'Someone commented on your product',
     text: `${user.fullName} commented on your product with ${body}`
