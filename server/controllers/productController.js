@@ -2,10 +2,10 @@ const asyncHandler = require('express-async-handler');
 const Comment = require('../models/comment');
 const Product = require('../models/product');
 const User = require('../models/user');
-const { sendJSONResponse, sendMail } = require('../utils');
+const { sendJSONResponse, sendMail, sendSms } = require('../utils');
 const admin = require('firebase-admin');
 
-const service= require('../config/firebaseConfig.js');
+const service = require('../config/firebaseConfig.js');
 
 admin.initializeApp({
   credential: admin.credential.cert(service)
@@ -22,34 +22,34 @@ const createProduct = asyncHandler(async (req, res) => {
     geoDetails,
     image
   } = req.body;
-    const user = await User.findOne({ email: req.user.email }).select('-salt -hash')
-    const product = new Product();
+  const user = await User.findOne({ email: req.user.email }).select('-salt -hash')
+  const product = new Product();
 
-    product.name = name;
-    product.maxDistance = distanceInMeters;
-    product.address = address;
-    product.image = image;
-    product.location = {
+  product.name = name;
+  product.maxDistance = distanceInMeters;
+  product.address = address;
+  product.image = image;
+  product.location = {
+    type: 'Point',
+    coordinates: geoDetails
+  };
+  product.createdBy = user;
+  await product.save();
+
+  const productReference = db.collection('Product').doc(name);
+  await productReference.set({
+    name,
+    maxDistance: distanceInMeters,
+    address,
+    image,
+    location: {
       type: 'Point',
       coordinates: geoDetails
-    };
-    product.createdBy = user;
-    await product.save();
+    },
+  })
 
-    const productReference = db.collection('Product').doc(name);
-    await productReference.set({
-      name,
-      maxDistance: distanceInMeters,
-      address,
-      image,
-      location: {
-        type: 'Point',
-        coordinates: geoDetails
-      },
-    })
+  return sendJSONResponse(res, 'Product successfully created', 'success', 200, product);
 
-    return sendJSONResponse(res, 'Product successfully created', 'success', 200, product);
-  
 })
 
 const getProducts = asyncHandler(async (req, res) => {
@@ -110,6 +110,10 @@ const comment = asyncHandler(async (req, res) => {
       text: `${user.fullName} replied to your comment with ${body}`
     }
     sendMail(data)
+
+    const to = user.phone.toString()
+    const text = `${user.fullName} replied to your comment with ${body}`
+    sendSms(to, text)
     return sendJSONResponse(res, 'Comment sent successfully', 'success', 200, comment);
   }
   const comment = new Comment();
@@ -125,6 +129,9 @@ const comment = asyncHandler(async (req, res) => {
     text: `${user.fullName} commented on your product with ${body}`
   }
   sendMail(data)
+  const to = user.phone.toString()
+  const text = `${user.fullName} commented on your product with ${body}`
+  sendSms(to, text)
   return sendJSONResponse(res, 'Comment sent successfully', 'success', 200, comment);
 })
 
