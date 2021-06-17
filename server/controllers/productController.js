@@ -50,7 +50,8 @@ const createProduct = asyncHandler(async (req, res) => {
     })
 
     return sendJSONResponse(res, 'Product successfully created', 'success', 200, product);
-  } catch {
+  } catch (error) {
+    console.error(error)
     res.status(500)
     throw new Error('Something Went Wrong');
   }
