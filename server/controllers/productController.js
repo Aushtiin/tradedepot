@@ -22,7 +22,6 @@ const createProduct = asyncHandler(async (req, res) => {
     geoDetails,
     image
   } = req.body;
-  try {
     const user = await User.findOne({ email: req.user.email }).select('-salt -hash')
     const product = new Product();
 
@@ -50,11 +49,7 @@ const createProduct = asyncHandler(async (req, res) => {
     })
 
     return sendJSONResponse(res, 'Product successfully created', 'success', 200, product);
-  } catch (error) {
-    console.error(error)
-    res.status(500)
-    throw new Error('Something Went Wrong');
-  }
+  
 })
 
 const getProducts = asyncHandler(async (req, res) => {
