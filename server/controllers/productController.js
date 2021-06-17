@@ -110,9 +110,21 @@ const comment = asyncHandler(async (req, res) => {
   return sendJSONResponse(res, 'Comment sent successfully', 'success', 200, comment);
 })
 
+const getComments = asyncHandler(async (req, res) => {
+  const product = await Product.findById(req.params.id)
+  
+  const comments = await Comment.findOne({product: product._id}).populate({ path: 'createdBy', select: 'fullName email' });
+
+  if (comments) {
+    // let commentsForProduct = [];
+    return sendJSONResponse(res, 'Comments for Product', 'success', 200, comments);
+  }
+})
+
 module.exports = {
   createProduct,
   getProducts, 
   getProduct,
+  getComments,
   comment
 }
