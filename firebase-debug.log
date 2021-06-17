@@ -1,0 +1,21 @@
+[debug] [2021-06-17T07:58:38.242Z] ----------------------------------------------------------------------
+[debug] [2021-06-17T07:58:38.243Z] Command:       /home/austin/.nvm/versions/node/v14.16.0/bin/node /home/austin/.nvm/versions/node/v14.16.0/bin/firebase init
+[debug] [2021-06-17T07:58:38.244Z] CLI Version:   9.12.1
+[debug] [2021-06-17T07:58:38.244Z] Platform:      linux
+[debug] [2021-06-17T07:58:38.244Z] Node Version:  v14.16.0
+[debug] [2021-06-17T07:58:38.244Z] Time:          Thu Jun 17 2021 08:58:38 GMT+0100 (West Africa Standard Time)
+[debug] [2021-06-17T07:58:38.245Z] ----------------------------------------------------------------------
+[debug] 
+[debug] [2021-06-17T07:58:38.249Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2021-06-17T07:58:38.249Z] > authorizing via signed-in user (aotangban@gmail.com)
+[info] 
+     ######## #### ########  ######## ########     ###     ######  ########
+     ##        ##  ##     ## ##       ##     ##  ##   ##  ##       ##
+     ######    ##  ########  ######   ########  #########  ######  ######
+     ##        ##  ##    ##  ##       ##     ## ##     ##       ## ##
+     ##       #### ##     ## ######## ########  ##     ##  ######  ########
+
+You're about to initialize a Firebase project in this directory:
+
+  /home/austin/projects/tradedepot-api
+
