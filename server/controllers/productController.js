@@ -57,6 +57,15 @@ const getProducts = asyncHandler(async (req, res) => {
   return sendJSONResponse(res, 'Products around your location', 'success', 200, products)
 })
 
+const getProduct = asyncHandler(async (req, res) => {
+  const product = await Product.findById(req.params.id)
+    if (product) {
+      return sendJSONResponse(res, 'Products Details', 'success', 200, product)
+    } else {
+      sendJSONResponse(res, 'Product not found', 'success', 404, null)
+    }
+})
+
 const comment = asyncHandler(async (req, res) => {
   const {
     body,
@@ -104,5 +113,6 @@ const comment = asyncHandler(async (req, res) => {
 module.exports = {
   createProduct,
   getProducts, 
+  getProduct,
   comment
 }
