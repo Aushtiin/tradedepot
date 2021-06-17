@@ -5,10 +5,10 @@ const User = require('../models/user');
 const { sendJSONResponse, sendMail } = require('../utils');
 const admin = require('firebase-admin');
 
-const serviceAccount = require('../config/firebaseConfig.json');
+const service= require('../config/firebaseConfig.js');
 
 admin.initializeApp({
-  credential: admin.credential.cert(serviceAccount)
+  credential: admin.credential.cert(service)
 })
 
 const db = admin.firestore()
@@ -119,7 +119,7 @@ const comment = asyncHandler(async (req, res) => {
   await comment.save()
 
   const data = {
-    from: 'Testdepot <contact@samples.mailgun.org>',
+    from: 'Testdepot <me@samples.mailgun.org>',
     to: product.createdBy.email,
     subject: 'Someone commented on your product',
     text: `${user.fullName} commented on your product with ${body}`
