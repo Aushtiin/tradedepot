@@ -3,6 +3,16 @@ const Comment = require('../models/comment');
 const Product = require('../models/product');
 const User = require('../models/user');
 const { sendJSONResponse, sendMail } = require('../utils');
+const admin = require('firebase-admin');
+
+const serviceAccount = require('../config/firebaseConfig.json');
+
+admin.initializeApp({
+  credential: admin.credential.cert(serviceAccount)
+})
+
+const db = admin.firestore()
+db.settings({ ignoreUndefinedProperties: true })
 
 const createProduct = asyncHandler(async (req, res) => {
   const {
@@ -10,7 +20,7 @@ const createProduct = asyncHandler(async (req, res) => {
     distanceInMeters,
     address,
     geoDetails,
-    // image
+    image
   } = req.body;
   try {
     const user = await User.findOne({ email: req.user.email }).select('-salt -hash')
@@ -19,13 +29,25 @@ const createProduct = asyncHandler(async (req, res) => {
     product.name = name;
     product.maxDistance = distanceInMeters;
     product.address = address;
-    // product.image = uploadImage;
+    product.image = image;
     product.location = {
       type: 'Point',
       coordinates: geoDetails
     };
     product.createdBy = user;
     await product.save();
+
+    const productReference = db.collection('Product').doc(name);
+    await productReference.set({
+      name,
+      maxDistance: distanceInMeters,
+      address,
+      image,
+      location: {
+        type: 'Point',
+        coordinates: geoDetails
+      },
+    })
 
     return sendJSONResponse(res, 'Product successfully created', 'success', 200, product);
   } catch {
@@ -59,11 +81,11 @@ const getProducts = asyncHandler(async (req, res) => {
 
 const getProduct = asyncHandler(async (req, res) => {
   const product = await Product.findById(req.params.id)
-    if (product) {
-      return sendJSONResponse(res, 'Products Details', 'success', 200, product)
-    } else {
-      sendJSONResponse(res, 'Product not found', 'success', 404, null)
-    }
+  if (product) {
+    return sendJSONResponse(res, 'Products Details', 'success', 200, product)
+  } else {
+    sendJSONResponse(res, 'Product not found', 'success', 404, null)
+  }
 })
 
 const comment = asyncHandler(async (req, res) => {
@@ -112,8 +134,8 @@ const comment = asyncHandler(async (req, res) => {
 
 const getComments = asyncHandler(async (req, res) => {
   const product = await Product.findById(req.params.id)
-  
-  const comments = await Comment.find({product: product._id}).populate({ path: 'createdBy', select: 'fullName email' });
+
+  const comments = await Comment.find({ product: product._id }).populate({ path: 'createdBy', select: 'fullName email' });
 
   if (comments) {
     return sendJSONResponse(res, 'Comments for Product', 'success', 200, comments);
@@ -124,7 +146,7 @@ const getComments = asyncHandler(async (req, res) => {
 
 module.exports = {
   createProduct,
-  getProducts, 
+  getProducts,
   getProduct,
   getComments,
   comment
