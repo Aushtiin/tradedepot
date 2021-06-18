@@ -16,7 +16,6 @@ app.use(cors())
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json({ limit: '50mb' }));
 
-app.use('/', (req, res) => res.status(200).json({message: 'Api is Live'}))
 app.use('/api', routes)
 
 app.use(notFound)
